@@ -71,7 +71,6 @@ class PasswordScreenState extends State<PasswordScreen> {
                         },
                       ),
                     ),
-                    // textAlign: TextAlign.center,
                     obscureText: _obscureText,
                     autofocus: true,
                   ),
@@ -86,64 +85,6 @@ class PasswordScreenState extends State<PasswordScreen> {
                         'Sign in',
                         style: TextStyles.buttonText,
                       ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Log in to the To-Do app'),
-        backgroundColor: Theme.of(context).colorScheme.primary.withOpacity(0.6),
-      ),
-      body: Container(
-         decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            colors: [Colors.blue, Colors.grey],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
-        ),
-        child: Center(
-          child: Padding(
-            padding: const EdgeInsets.all(20.0),
-            child: Container(
-              height: MediaQuery.of(context).size.height * 0.4,
-              padding: const EdgeInsets.all(30.0),
-              decoration: ContainerStyles.containerDecoration,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  TextStyles.styledText('Welcome!', TextStyles.greetingsText),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  TextField(
-                    controller: _passwordController,
-                    decoration: InputDecoration(
-                      labelText: 'Enter your password',
-                      labelStyle: TextStyles.labelText(context),
-                      // alignLabelWithHint: true,
-                    ),
-                    textAlign: TextAlign.center,
-                    obscureText: true,
-                  ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  ElevatedButton(
-                    onPressed: _checkPassword,
-                    child: const Text(
-                      'Sign in',
-                      style: TextStyles.buttonText,
                     ),
                   ),
                 ],
