@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class TextStyles {
   static const TextStyle buttonText = TextStyle(
-    fontSize: 18,
+    fontSize: 24,
     color: Colors.red,
     fontStyle: FontStyle.italic,
     fontWeight: FontWeight.bold,
@@ -27,7 +27,7 @@ class TextStyles {
 
   static TextStyle labelText(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
-    double fontSize = screenWidth < 400 ? 12 : 18;
+    double fontSize = screenWidth < 400 ? 18 : 24;
     return TextStyle(
       fontSize: fontSize,
       color: Colors.grey,
@@ -36,7 +36,7 @@ class TextStyles {
   }
 
   static const TextStyle greetingsText = TextStyle(
-    fontSize: 30,
+    fontSize: 32,
     color: Colors.redAccent,
     fontStyle: FontStyle.italic,
     fontWeight: FontWeight.bold,
