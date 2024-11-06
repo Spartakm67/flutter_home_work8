@@ -14,10 +14,16 @@ class PasswordScreenState extends State<PasswordScreen> {
   final TextEditingController _passwordController = TextEditingController();
   final String _correctPassword = dotenv.env['PASSWORD'] ?? '';
   bool _obscureText = true;
+  bool _isPasswordFieldEmpty = true;
 
   @override
   void initState() {
     super.initState();
+    _passwordController.addListener(() {
+      setState(() {
+        _isPasswordFieldEmpty = _passwordController.text.isEmpty;
+      });
+    });
   }
 
   @override
@@ -60,16 +66,20 @@ class PasswordScreenState extends State<PasswordScreen> {
                     decoration: InputDecoration(
                       labelText: 'Enter your password',
                       labelStyle: TextStyles.labelText(context),
-                      suffixIcon: IconButton(
-                        icon: Icon(
-                          _obscureText ? Icons.visibility : Icons.visibility_off,
-                        ),
-                        onPressed: () {
-                          setState(() {
-                            _obscureText = !_obscureText;
-                          });
-                        },
-                      ),
+                      suffixIcon: _isPasswordFieldEmpty
+                          ? null
+                          : IconButton(
+                              icon: Icon(
+                                _obscureText
+                                    ? Icons.visibility
+                                    : Icons.visibility_off,
+                              ),
+                              onPressed: () {
+                                setState(() {
+                                  _obscureText = !_obscureText;
+                                });
+                              },
+                            ),
                     ),
                     obscureText: _obscureText,
                     autofocus: true,
