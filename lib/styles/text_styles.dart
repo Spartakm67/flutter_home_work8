@@ -71,4 +71,13 @@ class TextStyles {
       overflow: TextOverflow.visible,
     );
   }
+
+  static const TextStyle tileText = TextStyle(
+    fontSize: 16,
+    color: Colors.indigo,
+    fontStyle: FontStyle.italic,
+    fontWeight: FontWeight.w500,
+  );
+
 }
+

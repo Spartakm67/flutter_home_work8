@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_home_work8/styles/container_styles.dart';
-// import 'package:flutter_home_work7/widgets/profile_header.dart';
-// import 'package:flutter_home_work7/widgets/user_status_widget_stateful.dart';
+import 'package:flutter_home_work8/styles/text_styles.dart';
 
 class TodoScreen extends StatefulWidget {
   const TodoScreen({super.key});
@@ -13,10 +12,14 @@ class TodoScreen extends StatefulWidget {
 class TodoScreenState extends State<TodoScreen> {
   final GlobalKey<AnimatedListState> _listKey = GlobalKey<AnimatedListState>();
   final List<String> _items = ['Task 1', 'Task 2', 'Task 3'];
+  final List<bool> _completed = [false, false, false];
 
   void _addItem() {
     const index = 0;
-    _items.insert(index, 'Task 1');
+    setState(() {
+      _items.insert(index, 'Task 1');
+      _completed.insert(index, false);
+    });
 
     _updateItemNumbers();
     _listKey.currentState?.insertItem(index);
@@ -24,13 +27,16 @@ class TodoScreenState extends State<TodoScreen> {
 
   void _removeItem(int index) {
     final removedItem = _items[index];
-    _items.removeAt(index);
+    setState(() {
+      _items.removeAt(index);
+      _completed.removeAt(index);
+    });
 
     _updateItemNumbers();
 
     _listKey.currentState?.removeItem(
       index,
-          (context, animation) => SizeTransition(
+      (context, animation) => SizeTransition(
         sizeFactor: animation,
         child: Container(
           color: Colors.redAccent,
@@ -56,12 +62,10 @@ class TodoScreenState extends State<TodoScreen> {
     return Dismissible(
       key: Key(item),
       direction: DismissDirection.horizontal,
-
       confirmDismiss: (direction) async {
         _removeItem(index);
         return false;
       },
-
       background: Container(
         color: Colors.red,
         alignment: Alignment.centerRight,
@@ -73,10 +77,44 @@ class TodoScreenState extends State<TodoScreen> {
         child: Container(
           decoration: ContainerStyles.containerTask,
           child: ListTile(
-            title: Text(item, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),),
-            trailing: IconButton(
-              icon: const Icon(Icons.delete, color: Colors.red),
-              onPressed: () => _removeItem(index),
+            tileColor: _completed[index] ? Colors.green[100] : null,
+            contentPadding: const EdgeInsets.symmetric(horizontal: 8),
+            title: Text(
+              item,
+              style: TextStyles.tileText,
+            ),
+            leading: Checkbox(
+                value: _completed[index],
+                onChanged: (bool? value) {
+                  setState(() {
+                    _completed[index] = value ?? false;
+                  });
+                },),
+
+              trailing: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                IconButton(
+                  icon: const Icon(Icons.edit, color: Colors.blue),
+                  iconSize: 18,
+                  onPressed: () {
+                    // final editFeature = EditFeature();
+                    // editFeature.editTask(
+                    //   context,
+                    //   task['id'],
+                    //   task['item'],
+                    // );
+                  },
+                ),
+                IconButton(
+                  icon: const Icon(
+                    Icons.delete_sweep,
+                    color: Colors.deepOrange,
+                  ),
+                  iconSize: 18,
+                  onPressed: () => _removeItem(index),
+                ),
+              ],
             ),
           ),
         ),
@@ -108,5 +146,3 @@ class TodoScreenState extends State<TodoScreen> {
     );
   }
 }
-
-
