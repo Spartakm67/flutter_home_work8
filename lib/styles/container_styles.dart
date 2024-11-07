@@ -13,13 +13,4 @@ class ContainerStyles {
       ),
     ],
   );
-
-  static final BoxDecoration containerTask = BoxDecoration(
-    color: Colors.white,
-    border: Border.all(
-      color: Colors.grey,
-      width: 1,
-    ),
-    borderRadius: BorderRadius.circular(12),
-  );
 }

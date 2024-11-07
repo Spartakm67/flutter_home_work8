@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_home_work8/styles/container_styles.dart';
 import 'package:flutter_home_work8/styles/text_styles.dart';
 
 class TodoScreen extends StatefulWidget {
@@ -75,9 +74,15 @@ class TodoScreenState extends State<TodoScreen> {
       child: SizeTransition(
         sizeFactor: animation,
         child: Container(
-          decoration: ContainerStyles.containerTask,
+          decoration: BoxDecoration(
+            color: _completed[index] ? Colors.green.withOpacity(0.2) : Colors.white,
+            border: Border.all(
+              color: Colors.grey,
+              width: 1,
+            ),
+            borderRadius: BorderRadius.circular(12),
+          ),
           child: ListTile(
-            tileColor: _completed[index] ? Colors.green[100] : null,
             contentPadding: const EdgeInsets.symmetric(horizontal: 8),
             title: Text(
               item,
@@ -129,17 +134,15 @@ class TodoScreenState extends State<TodoScreen> {
         backgroundColor: Theme.of(context).colorScheme.primary.withOpacity(0.3),
         title: const Text('To-Do List'),
       ),
-      body: Container(
-        color: Colors.lightBlue[50],
-        child: AnimatedList(
+      backgroundColor: Colors.lightBlue[50],
+      body: AnimatedList(
           key: _listKey,
           initialItemCount: _items.length,
           itemBuilder: (context, index, animation) {
             return _buildItem(_items[index], animation, index);
           },
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
+        floatingActionButton: FloatingActionButton(
         onPressed: _addItem,
         child: const Icon(Icons.add),
       ),
