@@ -13,12 +13,10 @@ class TodoScreen extends StatefulWidget {
 class TodoScreenState extends State<TodoScreen> {
   final GlobalKey<AnimatedListState> _listKey = GlobalKey<AnimatedListState>();
   final List<String> _items = ['Task 1', 'Task 2', 'Task 3'];
-  int _nextItemNumber = 4;
 
   void _addItem() {
-    final index = _items.length;
-    _items.add('Item $_nextItemNumber');
-    _nextItemNumber++;
+    const index = 0;
+    _items.insert(index, 'Task 1');
 
     _updateItemNumbers();
     _listKey.currentState?.insertItem(index);
@@ -93,12 +91,15 @@ class TodoScreenState extends State<TodoScreen> {
         backgroundColor: Theme.of(context).colorScheme.primary.withOpacity(0.3),
         title: const Text('To-Do List'),
       ),
-      body: AnimatedList(
-        key: _listKey,
-        initialItemCount: _items.length,
-        itemBuilder: (context, index, animation) {
-          return _buildItem(_items[index], animation, index);
-        },
+      body: Container(
+        color: Colors.lightBlue[50],
+        child: AnimatedList(
+          key: _listKey,
+          initialItemCount: _items.length,
+          itemBuilder: (context, index, animation) {
+            return _buildItem(_items[index], animation, index);
+          },
+        ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: _addItem,
