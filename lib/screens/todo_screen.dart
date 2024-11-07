@@ -19,7 +19,6 @@ class TodoScreenState extends State<TodoScreen> {
       _items.insert(index, 'Task 1');
       _completed.insert(index, false);
     });
-
     _updateItemNumbers();
     _listKey.currentState?.insertItem(index);
   }
@@ -30,9 +29,7 @@ class TodoScreenState extends State<TodoScreen> {
       _items.removeAt(index);
       _completed.removeAt(index);
     });
-
     _updateItemNumbers();
-
     _listKey.currentState?.removeItem(
       index,
       (context, animation) => SizeTransition(
