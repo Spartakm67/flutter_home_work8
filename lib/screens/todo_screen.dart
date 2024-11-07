@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_home_work8/styles/container_styles.dart';
 // import 'package:flutter_home_work7/widgets/profile_header.dart';
 // import 'package:flutter_home_work7/widgets/user_status_widget_stateful.dart';
 
@@ -71,11 +72,14 @@ class TodoScreenState extends State<TodoScreen> {
       ),
       child: SizeTransition(
         sizeFactor: animation,
-        child: ListTile(
-          title: Text(item),
-          trailing: IconButton(
-            icon: const Icon(Icons.delete),
-            onPressed: () => _removeItem(index),
+        child: Container(
+          decoration: ContainerStyles.containerTask,
+          child: ListTile(
+            title: Text(item, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),),
+            trailing: IconButton(
+              icon: const Icon(Icons.delete, color: Colors.red),
+              onPressed: () => _removeItem(index),
+            ),
           ),
         ),
       ),
