@@ -10,26 +10,38 @@ class TodoScreen extends StatefulWidget {
 
 class TodoScreenState extends State<TodoScreen> {
   final GlobalKey<AnimatedListState> _listKey = GlobalKey<AnimatedListState>();
-  final List<String> _items = ['Task 1', 'Task 2', 'Task 3'];
-  // final List<String> _tasks = ['Fix last project code', 'Buy the book', 'Watch news'];
+  final List<String> _items = [
+    'Task 1: Fix last project code',
+    'Task 2: Buy the book',
+    'Task 3: Watch news',
+  ];
+
   final List<bool> _completed = [false, false, false];
   final TextEditingController _taskController = TextEditingController();
 
-  void _addItem() {
-    _taskController.clear();
 
+  void _addItem(String newTask) {
+    const index = 0;
+    setState(() {
+      _items.insert(index, newTask);
+      _completed.insert(index, false);
+    });
+    _updateItemNumbers();
+    _listKey.currentState?.insertItem(index);
+  }
+
+  void _showAddTaskDialog() {
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('Add new task'),
+          title: const Text('Add New Task'),
           content: TextField(
             controller: _taskController,
-            decoration: const InputDecoration(
-              hintText: 'Enter new task',
-            ),
+            decoration: const InputDecoration(hintText: 'Enter task description'),
+            autofocus: true,
           ),
-          actions: <Widget>[
+          actions: [
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop();
@@ -38,17 +50,18 @@ class TodoScreenState extends State<TodoScreen> {
             ),
             TextButton(
               onPressed: () {
-                final newTaskText = _taskController.text.trim().isEmpty
-                    ? 'Task ${_items.length + 1}'
-                    : _taskController.text.trim();
-                const index = 0;
-                setState(() {
-                  _items.insert(index, 'Task 1');
-                  _completed.insert(index, false);
-                });
-                _updateItemNumbers();
-                _listKey.currentState?.insertItem(index);
-                Navigator.of(context).pop();
+                final newTask = _taskController.text.trim();
+                if (newTask.isNotEmpty) {
+                  _addItem(newTask);
+                  _taskController.clear();
+                  Navigator.of(context).pop();
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Text field can not be empty!'),
+                    ),
+                  );
+                }
               },
               child: const Text('Add'),
             ),
@@ -108,7 +121,7 @@ class TodoScreenState extends State<TodoScreen> {
 
   void _updateItemNumbers() {
     for (var i = 0; i < _items.length; i++) {
-      _items[i] = 'Task ${i + 1}';
+      _items[i] = 'Task ${i + 1}: ${_items[i].split(': ').last}';
     }
   }
 
@@ -160,12 +173,7 @@ class TodoScreenState extends State<TodoScreen> {
                   icon: const Icon(Icons.edit, color: Colors.blue),
                   iconSize: 18,
                   onPressed: () {
-                    // final editFeature = EditFeature();
-                    // editFeature.editTask(
-                    //   context,
-                    //   task['id'],
-                    //   task['item'],
-                    // );
+
                   },
                 ),
                 IconButton(
@@ -200,7 +208,7 @@ class TodoScreenState extends State<TodoScreen> {
         },
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: _addItem,
+        onPressed: _showAddTaskDialog,
         child: const Icon(Icons.add),
       ),
     );
