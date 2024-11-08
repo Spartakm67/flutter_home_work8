@@ -11,16 +11,50 @@ class TodoScreen extends StatefulWidget {
 class TodoScreenState extends State<TodoScreen> {
   final GlobalKey<AnimatedListState> _listKey = GlobalKey<AnimatedListState>();
   final List<String> _items = ['Task 1', 'Task 2', 'Task 3'];
+  // final List<String> _tasks = ['Fix last project code', 'Buy the book', 'Watch news'];
   final List<bool> _completed = [false, false, false];
+  final TextEditingController _taskController = TextEditingController();
 
   void _addItem() {
-    const index = 0;
-    setState(() {
-      _items.insert(index, 'Task 1');
-      _completed.insert(index, false);
-    });
-    _updateItemNumbers();
-    _listKey.currentState?.insertItem(index);
+    _taskController.clear();
+
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('Add new task'),
+            content: TextField(
+              controller: _taskController,
+              decoration: const InputDecoration(
+                hintText: 'Enter new task',
+              ),
+            ),
+           actions: <Widget>[
+             TextButton
+               (onPressed: () {
+               Navigator.of(context).pop();
+             },
+             child: const Text('Cancel'),
+             ),
+             TextButton(
+                 onPressed: () {
+                   final newTaskText = _taskController.text.trim().isEmpty
+                       ? 'Task ${_items.length + 1}'
+                       : _taskController.text.trim();
+                   const index = 0;
+                   setState(() {
+                     _items.insert(index, 'Task 1');
+                     _completed.insert(index, false);
+                   });
+                   _updateItemNumbers();
+                   _listKey.currentState?.insertItem(index);
+                   Navigator.of(context).pop();
+                 },
+          child: const Text('Add'),),
+           ],
+          );
+        },
+    );
   }
 
   void _removeItem(int index) {
@@ -146,3 +180,6 @@ class TodoScreenState extends State<TodoScreen> {
     );
   }
 }
+
+
+
