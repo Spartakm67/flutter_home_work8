@@ -19,66 +19,90 @@ class TodoScreenState extends State<TodoScreen> {
     _taskController.clear();
 
     showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: const Text('Add new task'),
-            content: TextField(
-              controller: _taskController,
-              decoration: const InputDecoration(
-                hintText: 'Enter new task',
-              ),
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Add new task'),
+          content: TextField(
+            controller: _taskController,
+            decoration: const InputDecoration(
+              hintText: 'Enter new task',
             ),
-           actions: <Widget>[
-             TextButton
-               (onPressed: () {
-               Navigator.of(context).pop();
-             },
-             child: const Text('Cancel'),
-             ),
-             TextButton(
-                 onPressed: () {
-                   final newTaskText = _taskController.text.trim().isEmpty
-                       ? 'Task ${_items.length + 1}'
-                       : _taskController.text.trim();
-                   const index = 0;
-                   setState(() {
-                     _items.insert(index, 'Task 1');
-                     _completed.insert(index, false);
-                   });
-                   _updateItemNumbers();
-                   _listKey.currentState?.insertItem(index);
-                   Navigator.of(context).pop();
-                 },
-          child: const Text('Add'),),
-           ],
-          );
-        },
+          ),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () {
+                final newTaskText = _taskController.text.trim().isEmpty
+                    ? 'Task ${_items.length + 1}'
+                    : _taskController.text.trim();
+                const index = 0;
+                setState(() {
+                  _items.insert(index, 'Task 1');
+                  _completed.insert(index, false);
+                });
+                _updateItemNumbers();
+                _listKey.currentState?.insertItem(index);
+                Navigator.of(context).pop();
+              },
+              child: const Text('Add'),
+            ),
+          ],
+        );
+      },
     );
   }
 
   void _removeItem(int index) {
     final removedItem = _items[index];
-    setState(() {
-      _items.removeAt(index);
-      _completed.removeAt(index);
-    });
-    _updateItemNumbers();
-    _listKey.currentState?.removeItem(
-      index,
-      (context, animation) => SizeTransition(
-        sizeFactor: animation,
-        child: Container(
-          color: Colors.redAccent,
-          child: ListTile(
-            title: Text(
-              removedItem,
-              style: const TextStyle(color: Colors.white),
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Are you sure you want to delete?'),
+          content: Text('Task: $removedItem'),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('Cancel'),
             ),
-          ),
-        ),
-      ),
-      duration: const Duration(milliseconds: 300),
+            TextButton(
+              onPressed: () {
+                setState(() {
+                  _items.removeAt(index);
+                  _completed.removeAt(index);
+                });
+                _updateItemNumbers();
+                _listKey.currentState?.removeItem(
+                  index,
+                  (context, animation) => SizeTransition(
+                    sizeFactor: animation,
+                    child: Container(
+                      color: Colors.redAccent,
+                      child: ListTile(
+                        title: Text(
+                          removedItem,
+                          style: const TextStyle(color: Colors.white),
+                        ),
+                      ),
+                    ),
+                  ),
+                  duration: const Duration(milliseconds: 300),
+                );
+                Navigator.of(context).pop();
+              },
+              child: const Text('Yes, delete'),
+            ),
+          ],
+        );
+      },
     );
   }
 
@@ -106,7 +130,9 @@ class TodoScreenState extends State<TodoScreen> {
         sizeFactor: animation,
         child: Container(
           decoration: BoxDecoration(
-            color: _completed[index] ? Colors.green.withOpacity(0.2) : Colors.white,
+            color: _completed[index]
+                ? Colors.green.withOpacity(0.2)
+                : Colors.white,
             border: Border.all(
               color: Colors.grey,
               width: 1,
@@ -120,14 +146,14 @@ class TodoScreenState extends State<TodoScreen> {
               style: TextStyles.tileText,
             ),
             leading: Checkbox(
-                value: _completed[index],
-                onChanged: (bool? value) {
-                  setState(() {
-                    _completed[index] = value ?? false;
-                  });
-                },),
-
-              trailing: Row(
+              value: _completed[index],
+              onChanged: (bool? value) {
+                setState(() {
+                  _completed[index] = value ?? false;
+                });
+              },
+            ),
+            trailing: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
                 IconButton(
@@ -167,19 +193,16 @@ class TodoScreenState extends State<TodoScreen> {
       ),
       backgroundColor: Colors.lightBlue[50],
       body: AnimatedList(
-          key: _listKey,
-          initialItemCount: _items.length,
-          itemBuilder: (context, index, animation) {
-            return _buildItem(_items[index], animation, index);
-          },
-        ),
-        floatingActionButton: FloatingActionButton(
+        key: _listKey,
+        initialItemCount: _items.length,
+        itemBuilder: (context, index, animation) {
+          return _buildItem(_items[index], animation, index);
+        },
+      ),
+      floatingActionButton: FloatingActionButton(
         onPressed: _addItem,
         child: const Icon(Icons.add),
       ),
     );
   }
 }
-
-
-
