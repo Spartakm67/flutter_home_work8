@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_home_work8/styles/text_styles.dart';
 import 'package:flutter_home_work8/services/edit_task_dialog.dart';
 import 'package:flutter_home_work8/repository/repository.dart';
+import 'package:flutter_home_work8/widgets/task_item.dart';
 
 class TodoScreen extends StatefulWidget {
   const TodoScreen({super.key});
@@ -12,7 +13,6 @@ class TodoScreen extends StatefulWidget {
 
 class TodoScreenState extends State<TodoScreen> {
   final GlobalKey<AnimatedListState> _listKey = GlobalKey<AnimatedListState>();
-
   final List<bool> _completed = [false, false, false];
   final TextEditingController _taskController = TextEditingController();
 
@@ -35,12 +35,13 @@ class TodoScreenState extends State<TodoScreen> {
           content: TextField(
             controller: _taskController,
             decoration:
-                const InputDecoration(hintText: 'Enter task description'),
+            const InputDecoration(hintText: 'Enter task description'),
             autofocus: true,
           ),
           actions: [
             TextButton(
               onPressed: () {
+                _taskController.clear();
                 Navigator.of(context).pop();
               },
               child: const Text('Cancel'),
@@ -92,7 +93,7 @@ class TodoScreenState extends State<TodoScreen> {
                 _updateItemNumbers();
                 _listKey.currentState?.removeItem(
                   index,
-                  (context, animation) => SizeTransition(
+                      (context, animation) => SizeTransition(
                     sizeFactor: animation,
                     child: Container(
                       color: Colors.redAccent,
@@ -122,82 +123,6 @@ class TodoScreenState extends State<TodoScreen> {
     }
   }
 
-  Widget _buildItem(String item, Animation<double> animation, int index) {
-    return Dismissible(
-      key: Key(item),
-      direction: DismissDirection.horizontal,
-      confirmDismiss: (direction) async {
-        _removeItem(index);
-        return false;
-      },
-      background: Container(
-        color: Colors.red,
-        alignment: Alignment.centerRight,
-        padding: const EdgeInsets.symmetric(horizontal: 20),
-        child: const Icon(Icons.delete, color: Colors.white),
-      ),
-      child: SizeTransition(
-        sizeFactor: animation,
-        child: Container(
-          decoration: BoxDecoration(
-            color: _completed[index]
-                ? Colors.green.withOpacity(0.2)
-                : Colors.white,
-            border: Border.all(
-              color: Colors.grey,
-              width: 1,
-            ),
-            borderRadius: BorderRadius.circular(12),
-          ),
-          child: ListTile(
-            contentPadding: const EdgeInsets.symmetric(horizontal: 8),
-            title: Text(
-              item,
-              style: TextStyles.tileText,
-            ),
-            leading: Checkbox(
-              value: _completed[index],
-              onChanged: (bool? value) {
-                setState(() {
-                  _completed[index] = value ?? false;
-                });
-              },
-            ),
-            trailing: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                IconButton(
-                  icon: const Icon(Icons.edit, color: Colors.blue),
-                  iconSize: 18,
-                  onPressed: () async {
-                    final updatedTask = await EditTaskDialog.showEditDialog(
-                      context,
-                      Repository.items[index].split(': ').last,
-                      index + 1,
-                    );
-                    if (updatedTask != null && updatedTask.isNotEmpty) {
-                      setState(() {
-                        Repository.items[index] = 'Task ${index + 1}: $updatedTask';
-                      });
-                    }
-                  },
-                ),
-                IconButton(
-                  icon: const Icon(
-                    Icons.delete_sweep,
-                    color: Colors.deepOrange,
-                  ),
-                  iconSize: 18,
-                  onPressed: () => _removeItem(index),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -216,6 +141,48 @@ class TodoScreenState extends State<TodoScreen> {
       floatingActionButton: FloatingActionButton(
         onPressed: _showAddTaskDialog,
         child: const Icon(Icons.add),
+      ),
+    );
+  }
+
+  Widget _buildItem(String item, Animation<double> animation, int index) {
+    return Dismissible(
+      key: Key(item),
+      direction: DismissDirection.horizontal,
+      confirmDismiss: (direction) async {
+        _removeItem(index);
+        return false;
+      },
+      background: Container(
+        color: Colors.red,
+        alignment: Alignment.centerRight,
+        padding: const EdgeInsets.symmetric(horizontal: 20),
+        child: const Icon(Icons.delete, color: Colors.white),
+      ),
+      child: SizeTransition(
+        sizeFactor: animation,
+        child: TaskItem(
+          item: item,
+          isCompleted: _completed[index],
+          onChanged: (value) {
+            setState(() {
+              _completed[index] = value ?? false;
+            });
+          },
+          onEdit: () async {
+            final updatedTask = await EditTaskDialog.showEditDialog(
+              context,
+              Repository.items[index].split(': ').last,
+              index + 1,
+            );
+            if (updatedTask != null && updatedTask.isNotEmpty) {
+              setState(() {
+                Repository.items[index] = 'Task ${index + 1}: $updatedTask';
+              });
+            }
+          },
+          onDelete: () => _removeItem(index),
+        ),
       ),
     );
   }
