@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_home_work8/styles/text_styles.dart';
+import 'package:flutter_home_work8/services/edit_task_dialog.dart';
+import 'package:flutter_home_work8/repository/repository.dart';
 
 class TodoScreen extends StatefulWidget {
   const TodoScreen({super.key});
@@ -10,20 +12,14 @@ class TodoScreen extends StatefulWidget {
 
 class TodoScreenState extends State<TodoScreen> {
   final GlobalKey<AnimatedListState> _listKey = GlobalKey<AnimatedListState>();
-  final List<String> _items = [
-    'Task 1: Fix last project code',
-    'Task 2: Buy the book',
-    'Task 3: Watch news',
-  ];
 
   final List<bool> _completed = [false, false, false];
   final TextEditingController _taskController = TextEditingController();
 
-
   void _addItem(String newTask) {
     const index = 0;
     setState(() {
-      _items.insert(index, newTask);
+      Repository.items.insert(index, newTask);
       _completed.insert(index, false);
     });
     _updateItemNumbers();
@@ -38,7 +34,8 @@ class TodoScreenState extends State<TodoScreen> {
           title: const Text('Add New Task'),
           content: TextField(
             controller: _taskController,
-            decoration: const InputDecoration(hintText: 'Enter task description'),
+            decoration:
+                const InputDecoration(hintText: 'Enter task description'),
             autofocus: true,
           ),
           actions: [
@@ -72,7 +69,7 @@ class TodoScreenState extends State<TodoScreen> {
   }
 
   void _removeItem(int index) {
-    final removedItem = _items[index];
+    final removedItem = Repository.items[index];
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -89,7 +86,7 @@ class TodoScreenState extends State<TodoScreen> {
             TextButton(
               onPressed: () {
                 setState(() {
-                  _items.removeAt(index);
+                  Repository.items.removeAt(index);
                   _completed.removeAt(index);
                 });
                 _updateItemNumbers();
@@ -120,8 +117,8 @@ class TodoScreenState extends State<TodoScreen> {
   }
 
   void _updateItemNumbers() {
-    for (var i = 0; i < _items.length; i++) {
-      _items[i] = 'Task ${i + 1}: ${_items[i].split(': ').last}';
+    for (var i = 0; i < Repository.items.length; i++) {
+      Repository.items[i] = 'Task ${i + 1}: ${Repository.items[i].split(': ').last}';
     }
   }
 
@@ -172,8 +169,17 @@ class TodoScreenState extends State<TodoScreen> {
                 IconButton(
                   icon: const Icon(Icons.edit, color: Colors.blue),
                   iconSize: 18,
-                  onPressed: () {
-
+                  onPressed: () async {
+                    final updatedTask = await EditTaskDialog.showEditDialog(
+                      context,
+                      Repository.items[index].split(': ').last,
+                      index + 1,
+                    );
+                    if (updatedTask != null && updatedTask.isNotEmpty) {
+                      setState(() {
+                        Repository.items[index] = 'Task ${index + 1}: $updatedTask';
+                      });
+                    }
                   },
                 ),
                 IconButton(
@@ -202,9 +208,9 @@ class TodoScreenState extends State<TodoScreen> {
       backgroundColor: Colors.lightBlue[50],
       body: AnimatedList(
         key: _listKey,
-        initialItemCount: _items.length,
+        initialItemCount: Repository.items.length,
         itemBuilder: (context, index, animation) {
-          return _buildItem(_items[index], animation, index);
+          return _buildItem(Repository.items[index], animation, index);
         },
       ),
       floatingActionButton: FloatingActionButton(
