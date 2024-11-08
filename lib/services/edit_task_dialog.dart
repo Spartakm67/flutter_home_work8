@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_home_work8/styles/add_task_dialog_styles.dart';
+import 'package:flutter_home_work8/styles/snack_bar_styles.dart';
 
 class EditTaskDialog {
   static Future<String?> showEditDialog(
-      BuildContext context, String currentTaskText, int taskNumber,) async {
+    BuildContext context,
+    String currentTaskText,
+    int taskNumber,
+  ) async {
     final TextEditingController editController =
         TextEditingController(text: currentTaskText);
 
@@ -16,6 +21,7 @@ class EditTaskDialog {
             controller: editController,
             decoration: const InputDecoration(
               labelText: 'Task Description',
+              hintStyle: AddTaskDialogStyle.hintTextStyle,
             ),
           ),
           actions: [
@@ -33,12 +39,20 @@ class EditTaskDialog {
                 } else {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
-                      content: Text('Task description cannot be empty!'),
+                      content: Text(
+                        'Task description cannot be empty!',
+                        style: SnackBarStyle.snackBarTextStyle,
+                      ),
+                      backgroundColor: SnackBarStyle.backgroundColor,
+                      duration: SnackBarStyle.displayDuration,
                     ),
                   );
                 }
               },
-              child: const Text('Save'),
+              child: const Text(
+                'Save',
+                style: AddTaskDialogStyle.addButtonTextStyle,
+              ),
             ),
           ],
         );

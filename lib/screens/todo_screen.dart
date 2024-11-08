@@ -3,6 +3,8 @@ import 'package:flutter_home_work8/services/add_task_dialog.dart';
 import 'package:flutter_home_work8/services/edit_task_dialog.dart';
 import 'package:flutter_home_work8/repository/repository.dart';
 import 'package:flutter_home_work8/widgets/task_list_item.dart';
+import 'package:flutter_home_work8/styles/add_task_dialog_styles.dart';
+import 'package:flutter_home_work8/styles/text_styles.dart';
 
 class TodoScreen extends StatefulWidget {
   const TodoScreen({super.key});
@@ -35,7 +37,10 @@ class TodoScreenState extends State<TodoScreen> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('Are you sure you want to delete?'),
+          title: const Text(
+            'Are you sure you want to delete?',
+            style: TextStyles.greetingsText,
+          ),
           content: Text('Task: $removedItem'),
           actions: <Widget>[
             TextButton(
@@ -69,7 +74,10 @@ class TodoScreenState extends State<TodoScreen> {
                 );
                 Navigator.of(context).pop();
               },
-              child: const Text('Yes, delete'),
+              child: const Text(
+                'Yes, delete',
+                style: AddTaskDialogStyle.addButtonTextStyle,
+              ),
             ),
           ],
         );

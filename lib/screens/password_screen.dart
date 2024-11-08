@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_home_work8/styles/text_styles.dart';
 import 'package:flutter_home_work8/styles/container_styles.dart';
+import 'package:flutter_home_work8/styles/snack_bar_styles.dart';
 
 class PasswordScreen extends StatefulWidget {
   const PasswordScreen({super.key});
@@ -110,7 +111,12 @@ class PasswordScreenState extends State<PasswordScreen> {
     if (_passwordController.text == _correctPassword) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('Successful login!'),
+          content: Text(
+            'Successful login!',
+            style: SnackBarStyle.snackBarTextStyle,
+          ),
+          backgroundColor: SnackBarStyle.backgroundColor,
+          duration: SnackBarStyle.displayDuration,
         ),
       );
       Navigator.pushNamed(context, '/todo');
@@ -118,7 +124,12 @@ class PasswordScreenState extends State<PasswordScreen> {
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('Invalid password!'),
+          content: Text(
+            'Invalid password!',
+            style: SnackBarStyle.snackBarTextStyle,
+          ),
+          backgroundColor: SnackBarStyle.backgroundColor,
+          duration: SnackBarStyle.displayDuration,
         ),
       );
       _passwordController.clear();

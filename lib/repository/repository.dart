@@ -1,6 +1,6 @@
  class Repository {
   static final List<String> _items = [
-    'Task 1: Fix last project code',
+    'Task 1: Fix the last project code',
     'Task 2: Buy the book',
     'Task 3: Watch news',
   ];
