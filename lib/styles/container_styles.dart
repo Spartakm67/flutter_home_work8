@@ -13,4 +13,12 @@ class ContainerStyles {
       ),
     ],
   );
+
+  static const BoxDecoration gradientDecoration = BoxDecoration(
+    gradient: LinearGradient(
+      colors: [Colors.blue, Colors.grey],
+      begin: Alignment.topLeft,
+      end: Alignment.bottomRight,
+    ),
+  );
 }

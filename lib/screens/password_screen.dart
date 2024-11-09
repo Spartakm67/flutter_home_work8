@@ -41,13 +41,7 @@ class PasswordScreenState extends State<PasswordScreen> {
         backgroundColor: Theme.of(context).colorScheme.primary.withOpacity(0.6),
       ),
       body: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            colors: [Colors.blue, Colors.grey],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
-        ),
+        decoration: ContainerStyles.gradientDecoration,
         child: Center(
           child: Padding(
             padding: const EdgeInsets.all(20.0),

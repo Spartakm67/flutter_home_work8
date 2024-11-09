@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_home_work8/styles/text_styles.dart';
+import 'package:flutter_home_work8/screens/task_detail_screen.dart';
 
 class TaskItem extends StatelessWidget {
   final String item;
@@ -30,9 +31,12 @@ class TaskItem extends StatelessWidget {
       ),
       child: ListTile(
         contentPadding: const EdgeInsets.symmetric(horizontal: 8),
-        title: Text(
-          item,
-          style: TextStyles.tileText,
+        title: Hero(
+          tag: 'taskHero',
+          child: Text(
+            item,
+            style: TextStyles.tileText,
+          ),
         ),
         leading: Checkbox(
           value: isCompleted,
@@ -56,6 +60,10 @@ class TaskItem extends StatelessWidget {
             ),
           ],
         ),
+        onTap: () {
+          Navigator.of(context).push(MaterialPageRoute(
+              builder: (context) => TaskDetailScreen(item: item),
+          ),);},
       ),
     );
   }
