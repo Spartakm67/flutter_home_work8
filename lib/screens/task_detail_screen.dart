@@ -17,14 +17,17 @@ class TaskDetailScreen extends StatelessWidget {
 
       body: Container(
         decoration: ContainerStyles.gradientDecoration,
-        child: Center(
-          child: Hero(
-            tag: 'taskHero',
-            child: Material(
-              type: MaterialType.transparency,
-              child: Text(
-                item,
-                style: TextStyles.greetingsText,
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Center(
+            child: Hero(
+              tag: 'taskHero',
+              child: Material(
+                type: MaterialType.transparency,
+                child: Text(
+                  item,
+                  style: TextStyles.greetingsText,
+                ),
               ),
             ),
           ),
